@@ -5,7 +5,7 @@ This repository is the shared implementation workspace for the Stockifi hospital
 It is intended to be publishable as the collaboration repo for:
 
 - Stockifi engineers and operators
-- Computer Agents product and engineering teams
+- Computer Agents
 
 The workflow modeled here is the one discussed for the enterprise rollout:
 

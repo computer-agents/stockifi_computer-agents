@@ -31,7 +31,7 @@ export const pricingAssumptions = {
       10000: 1500,
       100000: 5000,
     },
-    salesPriceMultiplier: 2.4,
+    salesPriceMultiplier: 1.2,
   },
 };
 
