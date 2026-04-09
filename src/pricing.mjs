@@ -27,9 +27,9 @@ export const pricingAssumptions = {
     averageOutputTokensPerSitePerPass: 1_400,
     platformInfraMultiplier: 1.35,
     supportRetainerByScale: {
-      1000: 500,
-      10000: 1500,
-      100000: 5000,
+      1000: 100,
+      10000: 200,
+      100000: 500,
     },
     salesPriceMultiplier: 1.2,
   },
