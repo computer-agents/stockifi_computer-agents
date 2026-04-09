@@ -1,0 +1,27 @@
+{
+  "name": "@computer-agents/stockifi-computer-agents",
+  "private": true,
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Shared Computer Agents workflow repo for Stockifi's restaurant menu enrichment pipeline.",
+  "scripts": {
+    "blueprint": "node src/workflows/show-blueprint.mjs",
+    "doctor": "node src/workflows/doctor.mjs",
+    "bootstrap": "node src/workflows/bootstrap.mjs",
+    "install:skills": "node src/workflows/install-skills.mjs",
+    "install:firecrawl-skill": "node src/workflows/install-firecrawl-skill.mjs",
+    "seed:restaurants": "node src/workflows/seed-restaurants.mjs",
+    "import:restaurants": "node src/workflows/seed-restaurants.mjs",
+    "run:batch": "node src/workflows/run-batch.mjs",
+    "run:restaurant": "node src/workflows/run-single-restaurant.mjs",
+    "schedule:refresh": "node src/workflows/create-change-monitor-schedule.mjs",
+    "estimate:pricing": "node src/workflows/estimate-pricing.mjs",
+    "validate": "npm run blueprint"
+  },
+  "dependencies": {
+    "computer-agents": "^2.5.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

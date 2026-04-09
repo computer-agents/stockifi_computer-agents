@@ -1,0 +1,4 @@
+slug,name,website,city,country,bookingUrl,knownMenuUrls,notes
+jw-steakhouse-berlin,JW Steakhouse Berlin,https://www.jwsteakhouseberlin.com/our-menus,Berlin,Germany,https://www.opentable.com/restaurant/profile/271461/reserve?restref=271461,https://www.jwsteakhouseberlin.com/our-menus|https://www.jwsteakhouseberlin.com/resourcefiles/pdf/jw-food-menu.pdf,Official HTML page and food PDF on same domain
+mina-berlin,MINA Berlin,https://minaberlin.de/en/,Berlin,Germany,https://www.sevenrooms.com,https://minaberlin.de/en/|https://minaberlin.de/upload/Mina_Menu_Berlin_290x385_29_08_en.pdf,Restaurant landing page with PDF menu and SevenRooms flow
+the-roof-milano,The Roof Milano,https://www.theroofmilano.com/en,Milan,Italy,https://theroofmilano.superbexperience.com/,https://www.theroofmilano.com/en|https://www.deicavaliericollection.com/images/documents/The_Roof_Milano_-_Restaurant_Menu_New1.pdf,Operator site with external PDF menu and booking flow

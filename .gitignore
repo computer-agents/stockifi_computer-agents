@@ -1,0 +1,4 @@
+node_modules
+.env
+.stockifi-demo-state.json
+.stockifi-workflow-state.json
