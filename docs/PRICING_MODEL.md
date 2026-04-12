@@ -13,6 +13,7 @@ Each scenario assumes:
 - `claude-haiku-4-5` across the workflow
 - Firecrawl for HTML and PDF flows
 - Browser usage for a minority of photo-menu sites
+- ACP computer runtime priced from named compute profiles (`Lite`, `Standard`, `Power`, `Desktop`)
 
 ## Sources
 
@@ -20,6 +21,8 @@ Each scenario assumes:
   https://platform.claude.com/docs/en/about-claude/pricing
 - Firecrawl pricing:
   https://www.firecrawl.dev/pricing
+- ACP pricing:
+  https://computer-agents.com/pricing
 
 ## Current Repo Assumptions
 
@@ -30,7 +33,9 @@ These live in [`src/pricing.mjs`](../src/pricing.mjs):
 - average browser minutes per photo site per pass: `1.25`
 - average input tokens per site per pass: `9,000`
 - average output tokens per site per pass: `1,400`
-- platform infra multiplier: `1.35`
+- selected ACP computer profile: `standard`
+- average ACP runtime minutes per batch: `6.5`
+- ACP compute token base: `1 CT = $0.01`
 - support retainer increases by scale
 
 ## What The Script Produces
@@ -40,7 +45,8 @@ The script currently prints:
 - Firecrawl credit estimate
 - Firecrawl plan estimate
 - LLM monthly estimate
-- platform infra estimate
+- ACP runtime estimate
+- equivalent monthly Compute Tokens for Firecrawl, LLM, and ACP runtime
 - support estimate
 - estimated monthly operating cost
 - working suggested monthly customer price

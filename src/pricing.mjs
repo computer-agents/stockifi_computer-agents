@@ -3,7 +3,61 @@ export const PRICING_SOURCES = {
   firecrawl: 'https://www.firecrawl.dev/pricing',
 };
 
+function toCtFromUsd(usd) {
+  return Number((Number(usd || 0) / 0.01).toFixed(2));
+}
+
+function roundUsd(value) {
+  return Number(Number(value || 0).toFixed(2));
+}
+
+const ACP_COMPUTE_PROFILES = [
+  {
+    id: 'lite',
+    label: 'Lite',
+    description: 'Lowest-cost CLI-first computer profile for prompt-heavy and automation-heavy work.',
+    cpuCores: 0.5,
+    memoryGb: 1.5,
+    guiEnabled: false,
+    minuteUsd: 0.002,
+  },
+  {
+    id: 'standard',
+    label: 'Standard',
+    description: 'Balanced profile for normal coding, OCR, PDF processing, and batch orchestration.',
+    cpuCores: 1,
+    memoryGb: 2,
+    guiEnabled: false,
+    minuteUsd: 0.004,
+  },
+  {
+    id: 'power',
+    label: 'Power',
+    description: 'Higher CPU and memory for heavier builds and more demanding multi-step runs.',
+    cpuCores: 2,
+    memoryGb: 4,
+    guiEnabled: false,
+    minuteUsd: 0.0075,
+  },
+  {
+    id: 'desktop',
+    label: 'Desktop',
+    description: 'GUI-enabled profile for browser and desktop-app workflows.',
+    cpuCores: 2,
+    memoryGb: 4,
+    guiEnabled: true,
+    minuteUsd: 0.01,
+  },
+].map((profile) => ({
+  ...profile,
+  ctPerMinute: toCtFromUsd(profile.minuteUsd),
+}));
+
 export const pricingAssumptions = {
+  acp: {
+    dollarsPerComputeToken: 0.01,
+    computerProfiles: ACP_COMPUTE_PROFILES,
+  },
   anthropic: {
     model: 'claude-haiku-4-5',
     inputUsdPerMillionTokens: 1,
@@ -20,12 +74,13 @@ export const pricingAssumptions = {
   workflow: {
     passesPerMonth: 2,
     batchSize: 5,
+    computerProfileId: 'standard',
     averageFirecrawlSourcesPerSitePerPass: 2.2,
     photoMenuShare: 0.1,
     averageBrowserMinutesPerPhotoSitePerPass: 1.25,
     averageInputTokensPerSitePerPass: 9_000,
     averageOutputTokensPerSitePerPass: 1_400,
-    platformInfraMultiplier: 1.35,
+    averageAcpRuntimeMinutesPerBatch: 6.5,
     supportRetainerByScale: {
       1000: 100,
       10000: 200,
@@ -58,9 +113,16 @@ function estimateFirecrawlCost(requiredCredits) {
   return best;
 }
 
+function getComputerProfile(profileId = pricingAssumptions.workflow.computerProfileId) {
+  return pricingAssumptions.acp.computerProfiles.find((profile) => profile.id === profileId)
+    || pricingAssumptions.acp.computerProfiles[0];
+}
+
 export function estimateScenario(websiteCount) {
   const workflow = pricingAssumptions.workflow;
   const passesPerMonth = workflow.passesPerMonth;
+  const computerProfile = getComputerProfile(workflow.computerProfileId);
+  const batchesPerMonth = Math.ceil(websiteCount / workflow.batchSize) * passesPerMonth;
   const firecrawlCredits =
     websiteCount * passesPerMonth * workflow.averageFirecrawlSourcesPerSitePerPass
     + websiteCount * passesPerMonth * workflow.photoMenuShare * workflow.averageBrowserMinutesPerPhotoSitePerPass * pricingAssumptions.firecrawl.browserCreditsPerMinute;
@@ -74,22 +136,42 @@ export function estimateScenario(websiteCount) {
     (inputTokens / 1_000_000) * pricingAssumptions.anthropic.inputUsdPerMillionTokens
     + (outputTokens / 1_000_000) * pricingAssumptions.anthropic.outputUsdPerMillionTokens;
 
-  const platformInfraUsd = (llmMonthlyUsd + firecrawl.monthlyUsd) * (workflow.platformInfraMultiplier - 1);
+  const acpRuntimeMinutesPerMonth = batchesPerMonth * workflow.averageAcpRuntimeMinutesPerBatch;
+  const acpRuntimeMonthlyUsd = acpRuntimeMinutesPerMonth * computerProfile.minuteUsd;
+  const llmMonthlyCtEquivalent = toCtFromUsd(llmMonthlyUsd);
+  const firecrawlMonthlyCtEquivalent = toCtFromUsd(firecrawl.monthlyUsd);
+  const acpRuntimeMonthlyCt = toCtFromUsd(acpRuntimeMonthlyUsd);
   const supportRetainerUsd = workflow.supportRetainerByScale[websiteCount] ?? 0;
-  const estimatedMonthlyCostUsd = llmMonthlyUsd + firecrawl.monthlyUsd + platformInfraUsd + supportRetainerUsd;
+  const estimatedMonthlyCostUsd = llmMonthlyUsd + firecrawl.monthlyUsd + acpRuntimeMonthlyUsd + supportRetainerUsd;
+  const estimatedMonthlyComputeTokensEquivalent = llmMonthlyCtEquivalent + firecrawlMonthlyCtEquivalent + acpRuntimeMonthlyCt;
   const suggestedMonthlyPriceUsd = Math.ceil(estimatedMonthlyCostUsd * workflow.salesPriceMultiplier / 100) * 100;
 
   return {
     websiteCount,
     passesPerMonth,
     batchSize: workflow.batchSize,
+    batchesPerMonth,
+    computerProfile: {
+      id: computerProfile.id,
+      label: computerProfile.label,
+      cpuCores: computerProfile.cpuCores,
+      memoryGb: computerProfile.memoryGb,
+      guiEnabled: computerProfile.guiEnabled,
+      minuteUsd: computerProfile.minuteUsd,
+      ctPerMinute: computerProfile.ctPerMinute,
+    },
     firecrawlCreditsPerMonth: Math.ceil(firecrawlCredits),
     firecrawlPlan: firecrawl.plan,
-    firecrawlMonthlyUsd: Number(firecrawl.monthlyUsd.toFixed(2)),
-    llmMonthlyUsd: Number(llmMonthlyUsd.toFixed(2)),
-    platformInfraUsd: Number(platformInfraUsd.toFixed(2)),
+    firecrawlMonthlyUsd: roundUsd(firecrawl.monthlyUsd),
+    firecrawlMonthlyCtEquivalent,
+    llmMonthlyUsd: roundUsd(llmMonthlyUsd),
+    llmMonthlyCtEquivalent,
+    acpRuntimeMinutesPerMonth: Number(acpRuntimeMinutesPerMonth.toFixed(2)),
+    acpRuntimeMonthlyUsd: roundUsd(acpRuntimeMonthlyUsd),
+    acpRuntimeMonthlyCt,
     supportRetainerUsd,
-    estimatedMonthlyCostUsd: Number(estimatedMonthlyCostUsd.toFixed(2)),
+    estimatedMonthlyComputeTokensEquivalent: Number(estimatedMonthlyComputeTokensEquivalent.toFixed(2)),
+    estimatedMonthlyCostUsd: roundUsd(estimatedMonthlyCostUsd),
     suggestedMonthlyPriceUsd,
   };
 }

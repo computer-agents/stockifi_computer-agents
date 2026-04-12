@@ -32,6 +32,7 @@ export function getEnvironmentDefinition(config) {
   return {
     name: config.environmentName,
     description: 'Hybrid hospitality enrichment workspace for Stockifi-style restaurant discovery, extraction, and refresh jobs.',
+    computeProfile: config.computeProfile || 'standard',
     runtimes: {
       nodejs: '20',
       python: '3.12',

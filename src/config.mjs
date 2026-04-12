@@ -21,6 +21,7 @@ export function getConfig() {
     platformUrl: process.env.STOCKIFI_PLATFORM_URL ?? 'https://platform.computer-agents.com',
     environmentName: process.env.STOCKIFI_ENVIRONMENT_NAME ?? 'stockifi-hospitality-pipeline',
     existingEnvironmentId: process.env.STOCKIFI_EXISTING_ENVIRONMENT_ID ?? '',
+    computeProfile: process.env.STOCKIFI_COMPUTE_PROFILE ?? 'standard',
     databaseName: process.env.STOCKIFI_DATABASE_NAME ?? 'stockifi-hospitality-intelligence',
     batchSize: readInteger(process.env.STOCKIFI_BATCH_SIZE, 5),
     passesPerMonth: readInteger(process.env.STOCKIFI_PASSES_PER_MONTH, 2),

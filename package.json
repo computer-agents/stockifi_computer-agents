@@ -19,7 +19,7 @@
     "validate": "npm run blueprint"
   },
   "dependencies": {
-    "computer-agents": "^2.5.0"
+    "computer-agents": "^2.6.0"
   },
   "engines": {
     "node": ">=20.0.0"
