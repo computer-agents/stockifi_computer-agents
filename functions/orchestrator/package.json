@@ -1,0 +1,13 @@
+{
+  "name": "stockifi-orchestrator-function",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "dependencies": {
+    "computer-agents": "^2.6.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

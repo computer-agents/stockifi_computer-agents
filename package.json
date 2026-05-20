@@ -7,6 +7,10 @@
   "scripts": {
     "blueprint": "node src/workflows/show-blueprint.mjs",
     "doctor": "node src/workflows/doctor.mjs",
+    "setup:cloud": "node scripts/setup-cloud.mjs",
+    "create:functions": "node scripts/setup-cloud.mjs",
+    "create:firecrawl-function": "node scripts/create-firecrawl-function.mjs",
+    "create:orchestrator-function": "node scripts/create-orchestrator-function.mjs",
     "bootstrap": "node src/workflows/bootstrap.mjs",
     "install:skills": "node src/workflows/install-skills.mjs",
     "install:firecrawl-skill": "node src/workflows/install-firecrawl-skill.mjs",

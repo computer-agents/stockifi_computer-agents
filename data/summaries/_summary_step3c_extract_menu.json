@@ -1,0 +1,25 @@
+{
+  "schema_version": "1",
+  "generated_at": "2026-04-22",
+  "model": "gemini-2.5-flash-lite",
+  "max_output_tokens": 65535,
+  "prompt_version": "step3c_menu_extract_v2",
+  "total_parents": 384,
+  "ok": 384,
+  "fresh": 15,
+  "resumed": 369,
+  "errors": 0,
+  "truncated_max_tokens": 2,
+  "parse_errors": 0,
+  "truncated_parents": [
+    "883_www.kolonialenbislett.no",
+    "882_www.kolonialenbislett.no"
+  ],
+  "parse_error_parents": [],
+  "totals": {
+    "input_tokens": 359218,
+    "output_tokens": 335354,
+    "cost_usd": 0.1701,
+    "wall_clock_s": 166.23
+  }
+}
