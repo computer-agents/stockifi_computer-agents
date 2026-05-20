@@ -10,13 +10,13 @@ const client = createClient(config);
 const state = loadProjectState();
 const restaurants = await resolveRestaurantsForSeed(config);
 
-printHeading('Seed Restaurant Database');
+printHeading('Load Restaurant Inputs');
 console.log(`ACP API target: ${describeTarget(config)}`);
 console.log(`restaurant source: ${config.restaurantsFile || 'built-in sample catalog'}`);
 
 const seeded = await seedRestaurantsIntoDatabase(client, state, restaurants, config);
 
-printJson('seeded', seeded.map((document) => ({
+printJson('loaded', seeded.map((document) => ({
   id: document.id,
   slug: document.data?.slug,
   website: document.data?.website,

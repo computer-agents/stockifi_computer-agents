@@ -5,7 +5,7 @@ This repository is a focused customer setup package for the Stockifi hospitality
 It contains:
 
 - scripts to create the Computer Agents cloud functions
-- scripts to create and seed the results database
+- scripts to create the results database and optionally load restaurant inputs
 - the Firecrawl router function source
 - the hosted orchestrator function source
 - sample and validation datasets
@@ -101,22 +101,26 @@ STOCKIFI_ORCHESTRATOR_TOKEN=...
 
 Copy those values into `.env`. They make later reruns target the same resources.
 
-## Seed The Database
+## Optional: Load Restaurant Inputs
 
-After `setup:cloud`, the database exists. To seed the workflow database used by the agent pipeline:
+After `setup:cloud`, the hosted database exists and the included validation datasets are already available in `data/`.
+No database-loading step is required to use those test sets.
+
+Only run this step if you want the workflow database to contain restaurant input rows for scheduled runs or UI inspection.
+This writes restaurant records into the database; it does not create or replace the benchmark and gold-set files.
 
 ```bash
 npm run bootstrap
 npm run seed:restaurants
 ```
 
-The default seed file is:
+By default, the loader uses the small sample catalog:
 
 ```bash
 data/restaurants.sample.csv
 ```
 
-To use the validation subset instead:
+To load the N50 validation subset into the workflow database:
 
 ```bash
 STOCKIFI_RESTAURANTS_FILE=./data/NO_companies_N50.csv npm run seed:restaurants
@@ -196,7 +200,7 @@ curl -X POST "$STOCKIFI_ORCHESTRATOR_FUNCTION_URL/run" \
 Included datasets:
 
 - `data/restaurants.sample.csv`
-  Small editable seed catalog for setup smoke tests.
+  Small editable restaurant-input catalog for setup smoke tests.
 - `data/NO_companies_N50.csv`
   Validation subset for controlled Norwegian hospitality runs.
 - `data/benchmark_outcome.csv`
@@ -253,7 +257,7 @@ This repo is intentionally scoped to the customer handoff:
 
 - setup automation
 - function source
-- database seeding
+- optional restaurant-input loading
 - sample datasets
 - docs
 

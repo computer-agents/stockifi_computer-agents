@@ -57,7 +57,7 @@ if (!environment?.id || !coordinatorAgent?.id) {
 
 const restaurants = await resolveBatchRestaurants();
 if (restaurants.length === 0) {
-  throw new Error('No restaurants available for this batch. Seed the database first.');
+  throw new Error('No restaurants available for this batch. Load restaurant inputs into the workflow database first.');
 }
 
 const batchId = `stockifi-batch-${new Date().toISOString().replace(/[-:.TZ]/g, '').slice(0, 12)}`;
